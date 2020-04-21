@@ -1,6 +1,6 @@
-/*
-	Live Server on port 8888
-*/
+#define PORT 7000
+#define IP_ADDRESS 127.0.0.1
+
 #include <algorithm>
 #include<io.h>
 #include<stdio.h>
@@ -19,27 +19,27 @@ int main(int argc, char* argv[])
 	char clientMessage[maxC_Message];
 	int recv_size; 
 
-	printf(" \nInitialising Winsock... ");
+	printf("\nInitialising Winsock... ");
 	if (WSAStartup(MAKEWORD(2, 2), & wsa) != 0)
 	{
-		printf(" Failed.Error Code : % d " , WSAGetLastError());
+		printf("Failed.Error Code : % d " , WSAGetLastError());
 		return 1;
 	}
 
-	printf(" Initialised.\n ");
+	printf("Initialised.\n ");
 
 	//Create a socket
 	if ((s = socket(AF_INET, SOCK_STREAM, 0)) == INVALID_SOCKET)
 	{
-		printf(" Could not create socket : % d ", WSAGetLastError());
+		printf("Could not create socket : % d ", WSAGetLastError());
 	}
 
-	printf(" Socket created.\n ");
+	printf("\n>>>Socket created.\n");
 
 	//Prepare the sockaddr_in structure
 	server.sin_family = AF_INET;
 	server.sin_addr.s_addr = INADDR_ANY;
-	server.sin_port = htons(7000);
+	server.sin_port = htons(PORT);
 
 	//Bind
 	if (bind(s, (struct sockaddr*) & server, sizeof(server)) == SOCKET_ERROR)
@@ -48,7 +48,7 @@ int main(int argc, char* argv[])
 		exit(EXIT_FAILURE);
 	}
 
-	puts("Bind done ");
+	puts(">>>Bind complete\n");
 
 	//Listen to incoming connections
 	listen(s, 3);
@@ -60,7 +60,7 @@ int main(int argc, char* argv[])
 	
 	while ((new_socket = accept(s, (struct sockaddr*) & client, & c)) != INVALID_SOCKET)
 	{
-		puts("Connection accepted ");
+		puts("\nConnection accepted ");
 
 		if ((recv_size = recv(new_socket, clientMessage, maxC_Message, 0)) == SOCKET_ERROR)
 		{
@@ -68,7 +68,7 @@ int main(int argc, char* argv[])
 		}
 		else
 		{
-			puts("We got this from the client:");
+			puts("\nWe got this from the client:");
 			if (recv_size > maxC_Message)
 			{
 				clientMessage[maxC_Message - 1] = '\0';
